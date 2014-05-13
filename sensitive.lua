@@ -1,34 +1,36 @@
 local function SensitiveWords()
 	local obj = {}
-	local dict = {}
+	local trie = {}
 
 	function obj.insert(str)
-		local word = dict
+		local word = trie
 		for i=1,#str do
 			local ch = string.byte(str, i)
 			if not word[ch] then word[ch] = {} end
 			word = word[ch]
 		end
-		word.terminal = true
+		
+		if word~=trie then word.terminal = true end
 	end
 	
 	function obj.match(str, i)
-		local word = dict
+		local word = trie
+		local m = {1}
 		local n = 0
 		while true do
+			if word.terminal then
+				table.insert(m, n)
+			end
 			local ch = string.byte(str, i + n)
 			if word[ch] then
 				word = word[ch]
 				n = n + 1
 			else
-				if word.terminal then
-					return true, n
-				end
 				break
 			end
 		end
 		
-		return false, 1
+		return #m>1, m[#m]
 	end
 
 	function obj.replace(str)
@@ -56,12 +58,10 @@ end
 
 --[[
 local SensitiveDictionary = SensitiveWords()
+SensitiveDictionary.insert("ab")
+SensitiveDictionary.insert("abcc")
 
-SensitiveDictionary.insert("傻逼")
-SensitiveDictionary.insert("逼")
-SensitiveDictionary.insert("QQ")
-
-print( SensitiveDictionary.replace("我的QQ是123456，你真是个傻逼逼") )
+print( SensitiveDictionary.replace("abcd") )
 ]]
 
 return SensitiveWords
