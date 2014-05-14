@@ -15,11 +15,11 @@ local function SensitiveWords()
 	
 	function obj.match(str, i)
 		local word = trie
-		local m = {1}
+		local m = nil
 		local n = 0
 		while true do
 			if word.terminal then
-				table.insert(m, n)
+				m = n
 			end
 			local ch = string.byte(str, i + n)
 			if word[ch] then
@@ -30,7 +30,24 @@ local function SensitiveWords()
 			end
 		end
 		
-		return #m>1, m[#m]
+		return m, m or 1
+	end
+	
+	function obj.contain(str)
+		local i = 1
+		while true do
+			local match, step = obj.match(str, i)
+			assert(step>0)
+			if match then
+				return true
+			end
+			
+			i = i + step
+			if i>#str then
+				break
+			end
+		end
+		return false
 	end
 
 	function obj.replace(str)
@@ -38,10 +55,11 @@ local function SensitiveWords()
 		local i = 1
 		while true do
 			local match, step = obj.match(str, i)
+			assert(step>0)
 			if match then
 				table.insert(result, "**")--string.rep("*", step)
 			else
-				table.insert(result, string.char(string.byte(str, i)))
+				table.insert(result, str:sub(i, i))
 			end
 			
 			i = i + step
@@ -58,10 +76,12 @@ end
 
 --[[
 local SensitiveDictionary = SensitiveWords()
-SensitiveDictionary.insert("ab")
-SensitiveDictionary.insert("abcc")
+SensitiveDictionary.insert("傻逼")
+SensitiveDictionary.insert("QQ")
+SensitiveDictionary.insert("123")
 
-print( SensitiveDictionary.replace("abcd") )
+print( SensitiveDictionary.replace("我的QQ是123456，你就是个傻逼。") )
+print( SensitiveDictionary.contain("234561") )
 ]]
 
 return SensitiveWords
