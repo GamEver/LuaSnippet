@@ -7,7 +7,7 @@ function string:split(delimiter)
 	local position = 1
 		
 	repeat
-		local delim_start, delim_end = self:find(delimiter, position)
+		local delim_start, delim_end = self:find(delimiter, position, true)
 		
 		local temp = ""
 		if delim_start then
