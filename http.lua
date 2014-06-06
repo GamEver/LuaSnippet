@@ -36,7 +36,7 @@ end
 
 function escape(s)
 	local str, _ = string.gsub(s, "([^A-Za-z0-9_])", function(c)
-		return string.format("%%%02x", string.byte(c))
+		return string.format("%%%02X", string.byte(c))
 	end)
 	return str
 end
