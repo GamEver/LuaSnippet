@@ -30,6 +30,11 @@ local x =
    e=9,
 }
 
+for k,v in pairs(x) do
+	print(k, v)
+end
+print()
+
 --通过key排序后输出
 for k,v in sorted_pairs(x) do
 	print(k, v)
