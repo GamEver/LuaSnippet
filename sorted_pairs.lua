@@ -3,7 +3,7 @@ local function sorted_pairs(hash_table, reverse)
 	for k in pairs(hash_table) do
 		table.insert(sort, k)
 	end
-	table.sort(sort, function(a,b)
+	table.sort(sort, function(a, b)
 		if not reverse then
 			return a<b
 		else
