@@ -143,3 +143,20 @@ function build_params(params)
 	table.remove(str)
 	return table.concat(str)
 end
+
+function spairs(hash_table, reverse)
+	local sort = {}
+	for k in pairs(hash_table) do
+		table.insert(sort, k)
+	end
+	table.sort(sort)
+	
+	local last_key = nil
+	return function(t)
+		local key, value = next(t, last_key)
+		if key then
+			last_key = key
+			return value, hash_table[value]
+		end
+	end, sort
+end
